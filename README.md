@@ -28,6 +28,8 @@ Delivers final version of the schema
 
 ##Schema defs
 
+Scheme are defined in file names which contains `graphql`, like `todos.graphql.js`
+
 Schema must be defined this way:
  
 !!!ATTN!!!: notice `extend` keyword on `Query` and `Mutation`
