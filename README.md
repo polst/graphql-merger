@@ -14,6 +14,8 @@ NOTES:
 
 Merges graphql modules without adding
  
+Not tested. Probably not working.
+ 
 ```
     schema {
       query: Query
@@ -25,7 +27,7 @@ Good for creating GraphQL packages to be used later.
 
 ####`import {graphqlMerger} from '../utils/graphqlMerger';`
 
-Merges graphql modules adding at the end 
+Merges graphql modules adding at the end. 
 
 ```
     schema {
