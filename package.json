@@ -1,0 +1,29 @@
+{
+  "name": "graphql-merger",
+  "version": "0.0.1",
+  "description": "Merge definitions of GraphQL scheme found in given folder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polst/graphql-merger.git"
+  },
+  "keywords": [
+    "graphql",
+    "schema",
+    "combine",
+    "merge"
+  ],
+  "author": "Paul Apostol",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polst/graphql-merger/issues"
+  },
+  "homepage": "https://github.com/polst/graphql-merger#readme",
+  "dependencies": {
+    "glob": "^7.1.1",
+    "lodash.merge": "^4.6.0"
+  }
+}
