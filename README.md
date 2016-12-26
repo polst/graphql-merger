@@ -27,7 +27,7 @@ Good for creating GraphQL packages to be used later.
 
 Merges graphql modules adding at the end 
 
-```graphql schema
+```
     schema {
       query: Query
       mutation: Mutation
