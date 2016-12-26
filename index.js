@@ -25,8 +25,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
-
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 //https://github.com/MarkTiedemann/throw-if-missing
 var x = function x(p) {
@@ -37,10 +36,8 @@ var x = function x(p) {
 var getGlobbedFiles = function getGlobbedFiles(globPatterns, removeRoot) {
   // For context switching
   var _this = this;
-
   // URL paths regex
   var urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
-
   // The output array
   var output = [];
 
@@ -74,6 +71,7 @@ var mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseRe
   return baseResolvers;
 };
 
+// --- MERGE MODULES
 var mergeData = function mergeData(dest, src) {
   if (src) {
     if (Array.isArray(src)) {
@@ -84,7 +82,8 @@ var mergeData = function mergeData(dest, src) {
   }
 };
 
-var graphqlMerger = function graphqlMerger() {
+// Deliver finel version of the schema
+var graphqlMerger = exports.graphqlMerger = function graphqlMerger() {
   var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : x(_templateObject);
 
   var _graphqlModulesMerger = graphqlModulesMerger(dir),
@@ -92,14 +91,15 @@ var graphqlMerger = function graphqlMerger() {
       Subscriptions = _graphqlModulesMerger.Subscriptions;
 
   var FinalSchema = {
-    typeDefs: ['\n    ' + Schema.typeDefs + '\n    type Query {\n      # Extended by typeDefs\n       bogusBulderTricksTheQueryCompiler: Int\n    }\n    type Mutation {\n      # Extended by typeDefs\n      bogusBulderTricksTheMutationCompiler: Int\n    }\n    schema {\n      query: Query\n      mutation: Mutation\n    }\n  '],
+    typeDefs: ['\n      type Query {\n        # Extended by typeDefs\n         bogusBulderTricksTheQueryCompiler: Int\n      }\n      type Mutation {\n        # Extended by typeDefs\n        bogusBulderTricksTheMutationCompiler: Int\n      }\n      ' + Schema.typeDefs + '\n      schema {\n        query: Query\n        mutation: Mutation\n      }\n    '],
     resolvers: Schema.resolvers
   };
 
   return { Schema: FinalSchema, Subscriptions: Subscriptions };
 };
 
-exports.graphqlMerger = graphqlMerger;
+//https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
+//Deliver partial version of schema
 function graphqlModulesMerger() {
   var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : x(_templateObject);
 
@@ -121,11 +121,9 @@ function graphqlModulesMerger() {
   // --- MERGE TYPE DEFINITONS
   var schema = moduleTypeDefinitions.join("\n");
 
-  var Schema = {
-    typeDefs: schema,
-    resolvers: mergeModuleResolvers(moduleResolvers, {})
-  };
-
-  return { Schema: Schema, Subscriptions: moduleSubscriptions };
+  return { Schema: {
+      typeDefs: schema,
+      resolvers: mergeModuleResolvers(moduleResolvers, {})
+    }, Subscriptions: moduleSubscriptions };
 };
 

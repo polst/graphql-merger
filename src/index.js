@@ -1,4 +1,3 @@
-//https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
 import path from 'path';
 import merge from 'lodash.merge';
 import glob from 'glob';
@@ -10,10 +9,8 @@ const x = p => { throw new Error(`Missing parameter: ${p}`) };
 const getGlobbedFiles = function getGlobbedFiles(globPatterns, removeRoot) {
   // For context switching
   let _this = this;
-
   // URL paths regex
   const urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
-
   // The output array
   let output = [];
 
@@ -47,6 +44,7 @@ const mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, base
   return baseResolvers;
 };
 
+// --- MERGE MODULES
 const mergeData = function mergeData(dest, src) {
   if (src) {
     if (Array.isArray(src)) {
@@ -58,34 +56,34 @@ const mergeData = function mergeData(dest, src) {
   }
 };
 
-const graphqlMerger = function graphqlMerger(dir = x`dir`) {
+// Deliver finel version of the schema
+export const graphqlMerger = function graphqlMerger(dir = x`dir`) {
   let {Schema, Subscriptions} = graphqlModulesMerger(dir);
 
   const FinalSchema = {
     typeDefs: [`
-    type Query {
-      # Extended by typeDefs
-       bogusBulderTricksTheQueryCompiler: Int
-    }
-    type Mutation {
-      # Extended by typeDefs
-      bogusBulderTricksTheMutationCompiler: Int
-    }
-    ${Schema.typeDefs}
-    schema {
-      query: Query
-      mutation: Mutation
-    }
-  `
-    ],
+      type Query {
+        # Extended by typeDefs
+         bogusBulderTricksTheQueryCompiler: Int
+      }
+      type Mutation {
+        # Extended by typeDefs
+        bogusBulderTricksTheMutationCompiler: Int
+      }
+      ${Schema.typeDefs}
+      schema {
+        query: Query
+        mutation: Mutation
+      }
+    `],
     resolvers: Schema.resolvers
   };
 
   return {Schema: FinalSchema, Subscriptions};
 };
 
-export {graphqlMerger};
-
+//https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
+//Deliver partial version of schema
 export default function graphqlModulesMerger(dir = x`dir`) {
 
   let moduleTypeDefinitions = [];
@@ -105,10 +103,8 @@ export default function graphqlModulesMerger(dir = x`dir`) {
   // --- MERGE TYPE DEFINITONS
   const schema = moduleTypeDefinitions.join("\n");
 
-  const Schema = {
+  return {Schema: {
     typeDefs: schema,
     resolvers: mergeModuleResolvers(moduleResolvers, {})
-  };
-
-  return {Schema, Subscriptions: moduleSubscriptions};
+  }, Subscriptions: moduleSubscriptions};
 };
