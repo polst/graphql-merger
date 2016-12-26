@@ -2,11 +2,11 @@
   "name": "graphql-merger",
   "version": "0.0.1",
   "description": "Merge definitions of GraphQL scheme found in given folder",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src/index.js > dist/index.js"
+    "build": "babel src/index.js > index.js"
   },
   "repository": {
     "type": "git",
