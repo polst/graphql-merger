@@ -12,24 +12,28 @@ NOTES:
 
 ####`import graphqlModulesMerger from '../utils/graphqlMerger';`
 
-Merges graphql modules without adding 
+Merges graphql modules without adding
+ 
 ```graphql schema
     schema {
       query: Query
       mutation: Mutation
     }
 ```
+
 Good for creating GraphQL packages to be used later.
 
 ####`import {graphqlMerger} from '../utils/graphqlMerger';`
 
 Merges graphql modules adding at the end 
+
 ```graphql schema
     schema {
       query: Query
       mutation: Mutation
     }
 ```
+
 Good for delivery of the schema.
 
 ###Returns
@@ -38,8 +42,10 @@ Good for delivery of the schema.
 
 ##Schema defs
 
-Schema must be defined this way: 
+Schema must be defined this way:
+ 
 !!!ATTN!!!: notice `extend` keyword on `Query` and `Mutation`
+
 ```ecmascript 6
 // language="GraphQL Schema"
 const typeDefs = `
