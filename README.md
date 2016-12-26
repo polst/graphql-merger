@@ -14,7 +14,7 @@ NOTES:
 
 Merges graphql modules without adding
  
-```graphql schema
+```
     schema {
       query: Query
       mutation: Mutation
@@ -46,7 +46,7 @@ Schema must be defined this way:
  
 !!!ATTN!!!: notice `extend` keyword on `Query` and `Mutation`
 
-```ecmascript 6
+```
 // language="GraphQL Schema"
 const typeDefs = `
   # the Todo type with an id and a text 
