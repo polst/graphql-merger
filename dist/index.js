@@ -1,18 +1,44 @@
-//https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
-import path from 'path';
-import merge from 'lodash.merge';
-import getGlobbedFiles from './lib/getGlobbedFiles';
-import x from './lib/mandatory';
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.graphqlMerger = undefined;
+
+var _templateObject = _taggedTemplateLiteral(['dir'], ['dir']);
+
+exports.default = graphqlModulesMerger;
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _lodash = require('lodash.merge');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _getGlobbedFiles = require('./lib/getGlobbedFiles');
+
+var _getGlobbedFiles2 = _interopRequireDefault(_getGlobbedFiles);
+
+var _mandatory = require('./lib/mandatory');
+
+var _mandatory2 = _interopRequireDefault(_mandatory);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); } //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
+
 
 // --- MERGE RESOLVERS
-const mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseResolvers) {
-  moduleResolvers.forEach(module => {
-    baseResolvers = merge(baseResolvers, module);
+var mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseResolvers) {
+  moduleResolvers.forEach(function (module) {
+    baseResolvers = (0, _lodash2.default)(baseResolvers, module);
   });
   return baseResolvers;
 };
 
-const mergeData = function mergeData(dest, src) {
+var mergeData = function mergeData(dest, src) {
   if (src) {
     if (Array.isArray(src)) {
       dest.concat(src);
@@ -22,60 +48,48 @@ const mergeData = function mergeData(dest, src) {
   }
 };
 
-const graphqlMerger = function graphqlMerger(dir = x`dir`) {
-  let { Schema, Subscriptions } = graphqlModulesMerger(dir);
+var graphqlMerger = function graphqlMerger() {
+  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _mandatory2.default)(_templateObject);
 
-  const FinalSchema = {
-    typeDefs: [`
-    ${ Schema.typeDefs }
-    
-    schema {
-      query: Query
-      mutation: Mutation
-    }
-  `],
+  var _graphqlModulesMerger = graphqlModulesMerger(dir),
+      Schema = _graphqlModulesMerger.Schema,
+      Subscriptions = _graphqlModulesMerger.Subscriptions;
+
+  var FinalSchema = {
+    typeDefs: ['\n    ' + Schema.typeDefs + '\n    \n    schema {\n      query: Query\n      mutation: Mutation\n    }\n  '],
     resolvers: Schema.resolvers
   };
 
-  return { Schema: FinalSchema, Subscriptions };
+  return { Schema: FinalSchema, Subscriptions: Subscriptions };
 };
 
-export { graphqlMerger };
+exports.graphqlMerger = graphqlMerger;
+function graphqlModulesMerger() {
+  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _mandatory2.default)(_templateObject);
 
-export default function graphqlModulesMerger(dir = x`dir`) {
 
-  let moduleTypeDefinitions = [];
-  let moduleResolvers = [];
-  let moduleSubscriptions = [];
+  var moduleTypeDefinitions = [];
+  var moduleResolvers = [];
+  var moduleSubscriptions = [];
 
-  let files = getGlobbedFiles(path.join(dir, "**", "*.graphql.js"));
+  var files = (0, _getGlobbedFiles2.default)(_path2.default.join(dir, "**", "*.graphql.js"));
 
   // Load schema files
-  files.forEach(file => {
-    let moduleSchema = require(path.resolve(file));
+  files.forEach(function (file) {
+    var moduleSchema = require(_path2.default.resolve(file));
     mergeData(moduleTypeDefinitions, moduleSchema.typeDefs);
     mergeData(moduleResolvers, moduleSchema.resolvers);
     mergeData(moduleSubscriptions, moduleSchema.subscriptions);
   });
 
   // --- MERGE TYPE DEFINITONS
-  const schema = `
-    type Query {
-      # Extended by typeDefs
-       bogusBulderTricksTheQueryCompiler: Int
-    }
-    type Mutation {
-      # Extended by typeDefs
-      bogusBulderTricksTheMutationCompiler: Int
-    }
-    ${ moduleTypeDefinitions.join("\n") }
-  `;
+  var schema = '\n    type Query {\n      # Extended by typeDefs\n       bogusBulderTricksTheQueryCompiler: Int\n    }\n    type Mutation {\n      # Extended by typeDefs\n      bogusBulderTricksTheMutationCompiler: Int\n    }\n    ' + moduleTypeDefinitions.join("\n") + '\n  ';
 
-  const Schema = {
+  var Schema = {
     typeDefs: schema,
     resolvers: mergeModuleResolvers(moduleResolvers, {})
   };
 
-  return { Schema, Subscriptions: moduleSubscriptions };
+  return { Schema: Schema, Subscriptions: moduleSubscriptions };
 };
 
