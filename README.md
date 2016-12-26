@@ -14,29 +14,13 @@ NOTES:
 
 Not tested. Probably not working.
 
-Merges graphql modules without adding
- 
-```
-    schema {
-      query: Query
-      mutation: Mutation
-    }
-```
+Merges graphql modules without adding `type Query`, `type Mutation` and `schema`.
 
 Good for creating GraphQL packages to be used later.
 
 ####`import {graphqlMerger} from '../utils/graphqlMerger';`
 
-Merges graphql modules adding at the end. 
-
-```
-    schema {
-      query: Query
-      mutation: Mutation
-    }
-```
-
-Good for delivery of the schema.
+Delivers final version of the schema
 
 ###Returns
 

@@ -63,7 +63,6 @@ const graphqlMerger = function graphqlMerger(dir = x`dir`) {
 
   const FinalSchema = {
     typeDefs: [`
-    ${Schema.typeDefs}
     type Query {
       # Extended by typeDefs
        bogusBulderTricksTheQueryCompiler: Int
@@ -72,6 +71,7 @@ const graphqlMerger = function graphqlMerger(dir = x`dir`) {
       # Extended by typeDefs
       bogusBulderTricksTheMutationCompiler: Int
     }
+    ${Schema.typeDefs}
     schema {
       query: Query
       mutation: Mutation
