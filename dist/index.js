@@ -17,11 +17,11 @@ var _lodash = require('lodash.merge');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _getGlobbedFiles = require('./lib/getGlobbedFiles');
+var _getGlobbedFiles = require('./getGlobbedFiles');
 
 var _getGlobbedFiles2 = _interopRequireDefault(_getGlobbedFiles);
 
-var _mandatory = require('./lib/mandatory');
+var _mandatory = require('./mandatory');
 
 var _mandatory2 = _interopRequireDefault(_mandatory);
 

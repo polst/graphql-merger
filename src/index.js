@@ -1,8 +1,8 @@
 //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
 import path from 'path';
 import merge from 'lodash.merge';
-import getGlobbedFiles from './lib/getGlobbedFiles';
-import x from './lib/mandatory';
+import getGlobbedFiles from './getGlobbedFiles';
+import x from './mandatory';
 
 // --- MERGE RESOLVERS
 const mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseResolvers) {

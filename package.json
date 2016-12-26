@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel index.js > dist/index.js"
+    "build": "babel src/index.js > dist/index.js"
   },
   "repository": {
     "type": "git",
