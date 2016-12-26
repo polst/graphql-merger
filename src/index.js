@@ -1,8 +1,43 @@
 //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
 import path from 'path';
 import merge from 'lodash.merge';
-import getGlobbedFiles from './getGlobbedFiles';
-import x from './mandatory';
+import glob from 'glob';
+
+//https://github.com/MarkTiedemann/throw-if-missing
+const x = p => { throw new Error(`Missing parameter: ${p}`) };
+
+//https://gist.github.com/nishant8BITS/f4ce80ce3e976f7532b3
+const getGlobbedFiles = function getGlobbedFiles(globPatterns, removeRoot) {
+  // For context switching
+  let _this = this;
+
+  // URL paths regex
+  const urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
+
+  // The output array
+  let output = [];
+
+  // If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
+  if (Array.isArray(globPatterns)) {
+    globPatterns.forEach(function(globPattern) {
+      let subset = _this.getGlobbedFiles(globPattern, removeRoot);
+      output = [...output, ...subset];
+    });
+  } else if ( (typeof globPatterns === 'string' || globPatterns instanceof String) ) {
+    if (urlRegex.test(globPatterns)) {
+      output.push(globPatterns);
+    } else {
+      let files = glob.sync(globPatterns);
+      if (removeRoot) {
+        files = files.map(function(file) {
+          return file.replace(removeRoot, '');
+        });
+      }
+      output = [...output, ...files];
+    }
+  }
+  return output;
+};
 
 // --- MERGE RESOLVERS
 const mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseResolvers) {

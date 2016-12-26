@@ -17,18 +17,54 @@ var _lodash = require('lodash.merge');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _getGlobbedFiles = require('./getGlobbedFiles');
+var _glob = require('glob');
 
-var _getGlobbedFiles2 = _interopRequireDefault(_getGlobbedFiles);
-
-var _mandatory = require('./mandatory');
-
-var _mandatory2 = _interopRequireDefault(_mandatory);
+var _glob2 = _interopRequireDefault(_glob);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); } //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
+
+
+//https://github.com/MarkTiedemann/throw-if-missing
+var x = function x(p) {
+  throw new Error('Missing parameter: ' + p);
+};
+
+//https://gist.github.com/nishant8BITS/f4ce80ce3e976f7532b3
+var getGlobbedFiles = function getGlobbedFiles(globPatterns, removeRoot) {
+  // For context switching
+  var _this = this;
+
+  // URL paths regex
+  var urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
+
+  // The output array
+  var output = [];
+
+  // If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
+  if (Array.isArray(globPatterns)) {
+    globPatterns.forEach(function (globPattern) {
+      var subset = _this.getGlobbedFiles(globPattern, removeRoot);
+      output = [].concat(_toConsumableArray(output), _toConsumableArray(subset));
+    });
+  } else if (typeof globPatterns === 'string' || globPatterns instanceof String) {
+    if (urlRegex.test(globPatterns)) {
+      output.push(globPatterns);
+    } else {
+      var files = _glob2.default.sync(globPatterns);
+      if (removeRoot) {
+        files = files.map(function (file) {
+          return file.replace(removeRoot, '');
+        });
+      }
+      output = [].concat(_toConsumableArray(output), _toConsumableArray(files));
+    }
+  }
+  return output;
+};
 
 // --- MERGE RESOLVERS
 var mergeModuleResolvers = function mergeModuleResolvers(moduleResolvers, baseResolvers) {
@@ -49,7 +85,7 @@ var mergeData = function mergeData(dest, src) {
 };
 
 var graphqlMerger = function graphqlMerger() {
-  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _mandatory2.default)(_templateObject);
+  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : x(_templateObject);
 
   var _graphqlModulesMerger = graphqlModulesMerger(dir),
       Schema = _graphqlModulesMerger.Schema,
@@ -65,14 +101,14 @@ var graphqlMerger = function graphqlMerger() {
 
 exports.graphqlMerger = graphqlMerger;
 function graphqlModulesMerger() {
-  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _mandatory2.default)(_templateObject);
+  var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : x(_templateObject);
 
 
   var moduleTypeDefinitions = [];
   var moduleResolvers = [];
   var moduleSubscriptions = [];
 
-  var files = (0, _getGlobbedFiles2.default)(_path2.default.join(dir, "**", "*.graphql.js"));
+  var files = getGlobbedFiles(_path2.default.join(dir, "**", "*.graphql.js"));
 
   // Load schema files
   files.forEach(function (file) {
