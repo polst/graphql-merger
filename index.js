@@ -92,7 +92,7 @@ var graphqlMerger = function graphqlMerger() {
       Subscriptions = _graphqlModulesMerger.Subscriptions;
 
   var FinalSchema = {
-    typeDefs: ['\n    ' + Schema.typeDefs + '\n    \n    schema {\n      query: Query\n      mutation: Mutation\n    }\n  '],
+    typeDefs: ['\n    ' + Schema.typeDefs + '\n    type Query {\n      # Extended by typeDefs\n       bogusBulderTricksTheQueryCompiler: Int\n    }\n    type Mutation {\n      # Extended by typeDefs\n      bogusBulderTricksTheMutationCompiler: Int\n    }\n    schema {\n      query: Query\n      mutation: Mutation\n    }\n  '],
     resolvers: Schema.resolvers
   };
 
@@ -119,7 +119,7 @@ function graphqlModulesMerger() {
   });
 
   // --- MERGE TYPE DEFINITONS
-  var schema = '\n    type Query {\n      # Extended by typeDefs\n       bogusBulderTricksTheQueryCompiler: Int\n    }\n    type Mutation {\n      # Extended by typeDefs\n      bogusBulderTricksTheMutationCompiler: Int\n    }\n    ' + moduleTypeDefinitions.join("\n") + '\n  ';
+  var schema = moduleTypeDefinitions.join("\n");
 
   var Schema = {
     typeDefs: schema,

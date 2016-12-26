@@ -12,9 +12,9 @@ NOTES:
 
 ####`import graphqlModulesMerger from '../utils/graphqlMerger';`
 
-Merges graphql modules without adding
- 
 Not tested. Probably not working.
+
+Merges graphql modules without adding
  
 ```
     schema {

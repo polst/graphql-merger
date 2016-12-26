@@ -64,7 +64,14 @@ const graphqlMerger = function graphqlMerger(dir = x`dir`) {
   const FinalSchema = {
     typeDefs: [`
     ${Schema.typeDefs}
-    
+    type Query {
+      # Extended by typeDefs
+       bogusBulderTricksTheQueryCompiler: Int
+    }
+    type Mutation {
+      # Extended by typeDefs
+      bogusBulderTricksTheMutationCompiler: Int
+    }
     schema {
       query: Query
       mutation: Mutation
@@ -96,17 +103,7 @@ export default function graphqlModulesMerger(dir = x`dir`) {
   });
 
   // --- MERGE TYPE DEFINITONS
-  const schema = `
-    type Query {
-      # Extended by typeDefs
-       bogusBulderTricksTheQueryCompiler: Int
-    }
-    type Mutation {
-      # Extended by typeDefs
-      bogusBulderTricksTheMutationCompiler: Int
-    }
-    ${moduleTypeDefinitions.join("\n")}
-  `;
+  const schema = moduleTypeDefinitions.join("\n");
 
   const Schema = {
     typeDefs: schema,
