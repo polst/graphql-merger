@@ -58,7 +58,7 @@ const mergeData = function mergeData(dest, src) {
 
 // Deliver finel version of the schema
 export const graphqlMerger = function graphqlMerger(dir = x`dir`) {
-  let {Schema, Subscriptions} = graphqlModulesMerger(dir);
+  let {Schema, SetupFunctions} = graphqlModulesMerger(dir);
 
   const FinalSchema = {
     typeDefs: [`
@@ -70,16 +70,21 @@ export const graphqlMerger = function graphqlMerger(dir = x`dir`) {
         # Extended by typeDefs
         bogusBulderTricksTheMutationCompiler: Int
       }
+      type Subscription {
+        # Extended by typeDefs
+        bogusBulderTricksTheSubscriptionCompiler: Int
+      }
       ${Schema.typeDefs}
       schema {
         query: Query
         mutation: Mutation
+        subscription: Subscription
       }
     `],
     resolvers: Schema.resolvers
   };
 
-  return {Schema: FinalSchema, Subscriptions};
+  return {Schema: FinalSchema, SetupFunctions};
 };
 
 //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
@@ -88,7 +93,7 @@ export default function graphqlModulesMerger(dir = x`dir`) {
 
   let moduleTypeDefinitions = [];
   let moduleResolvers = [];
-  let moduleSubscriptions = [];
+  let moduleSetupFunctions = [];
 
   let files = getGlobbedFiles(path.join(dir, "**", "*.graphql.js"));
 
@@ -97,7 +102,7 @@ export default function graphqlModulesMerger(dir = x`dir`) {
     let moduleSchema = require(path.resolve(file));
     mergeData(moduleTypeDefinitions, moduleSchema.typeDefs);
     mergeData(moduleResolvers, moduleSchema.resolvers);
-    mergeData(moduleSubscriptions, moduleSchema.subscriptions);
+    moduleSetupFunctions = mergeModuleResolvers(moduleSetupFunctions, moduleSchema.setupFunctions);
   });
 
   // --- MERGE TYPE DEFINITONS
@@ -106,5 +111,5 @@ export default function graphqlModulesMerger(dir = x`dir`) {
   return {Schema: {
     typeDefs: schema,
     resolvers: mergeModuleResolvers(moduleResolvers, {})
-  }, Subscriptions: moduleSubscriptions};
+  }, SetupFunctions: moduleSetupFunctions};
 };

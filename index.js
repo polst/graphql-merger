@@ -88,14 +88,14 @@ var graphqlMerger = exports.graphqlMerger = function graphqlMerger() {
 
   var _graphqlModulesMerger = graphqlModulesMerger(dir),
       Schema = _graphqlModulesMerger.Schema,
-      Subscriptions = _graphqlModulesMerger.Subscriptions;
+      SetupFunctions = _graphqlModulesMerger.SetupFunctions;
 
   var FinalSchema = {
-    typeDefs: ['\n      type Query {\n        # Extended by typeDefs\n         bogusBulderTricksTheQueryCompiler: Int\n      }\n      type Mutation {\n        # Extended by typeDefs\n        bogusBulderTricksTheMutationCompiler: Int\n      }\n      ' + Schema.typeDefs + '\n      schema {\n        query: Query\n        mutation: Mutation\n      }\n    '],
+    typeDefs: ['\n      type Query {\n        # Extended by typeDefs\n         bogusBulderTricksTheQueryCompiler: Int\n      }\n      type Mutation {\n        # Extended by typeDefs\n        bogusBulderTricksTheMutationCompiler: Int\n      }\n      type Subscription {\n        # Extended by typeDefs\n        bogusBulderTricksTheSubscriptionCompiler: Int\n      }\n      ' + Schema.typeDefs + '\n      schema {\n        query: Query\n        mutation: Mutation\n        subscription: Subscription\n      }\n    '],
     resolvers: Schema.resolvers
   };
 
-  return { Schema: FinalSchema, Subscriptions: Subscriptions };
+  return { Schema: FinalSchema, SetupFunctions: SetupFunctions };
 };
 
 //https://gist.github.com/icebob/553c1f9f1a9478d828bcb7a08d06790a
@@ -106,7 +106,7 @@ function graphqlModulesMerger() {
 
   var moduleTypeDefinitions = [];
   var moduleResolvers = [];
-  var moduleSubscriptions = [];
+  var moduleSetupFunctions = [];
 
   var files = getGlobbedFiles(_path2.default.join(dir, "**", "*.graphql.js"));
 
@@ -115,7 +115,7 @@ function graphqlModulesMerger() {
     var moduleSchema = require(_path2.default.resolve(file));
     mergeData(moduleTypeDefinitions, moduleSchema.typeDefs);
     mergeData(moduleResolvers, moduleSchema.resolvers);
-    mergeData(moduleSubscriptions, moduleSchema.subscriptions);
+    moduleSetupFunctions = mergeModuleResolvers(moduleSetupFunctions, moduleSchema.setupFunctions);
   });
 
   // --- MERGE TYPE DEFINITONS
@@ -124,6 +124,6 @@ function graphqlModulesMerger() {
   return { Schema: {
       typeDefs: schema,
       resolvers: mergeModuleResolvers(moduleResolvers, {})
-    }, Subscriptions: moduleSubscriptions };
+    }, SetupFunctions: moduleSetupFunctions };
 };
 
